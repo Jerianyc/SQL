@@ -1,0 +1,32 @@
+--create a database for a store based on items in my room
+
+CREATE TABLE gamer_girl_store (id INTEGER PRIMARY KEY, item TEXT, price INTEGER, type TEXT);
+INSERT INTO gamer_girl_store VALUES (1, "Wooloo Pokemon Plush", 33, "Plush");
+INSERT INTO gamer_girl_store VALUES (2, "Razer Kraken Kitty Headset", 110, "Tech");
+INSERT INTO gamer_girl_store VALUES (3, "Pastel Joy-Cons", 65, "Tech");
+INSERT INTO gamer_girl_store VALUES (4, "Sakura Miku Figure", 40, "Anime");
+INSERT INTO gamer_girl_store VALUES (5, "Quagsire Pokemon Plush", 33, "Plush");
+INSERT INTO gamer_girl_store VALUES (6, "Fruits Basket Manga", 15, "Anime");
+INSERT INTO gamer_girl_store VALUES (7, "Wotakoi Manga", 20, "Anime");
+INSERT INTO gamer_girl_store VALUES (8, "Razer Quartz Keyboard", 120, "Tech");
+INSERT INTO gamer_girl_store VALUES (9, "Pink Yoshi Plush", 7, "Plush");
+INSERT INTO gamer_girl_store VALUES (10, "Festival Hatsune Miku Figure", 48, "Anime");
+INSERT INTO gamer_girl_store VALUES (11, "PS5", 499, "Tech");
+INSERT INTO gamer_girl_store VALUES (12, "Nintendo Switch OLED", 299, "Tech");
+INSERT INTO gamer_girl_store VALUES (13, "Stardew Valley Game Deluxe", 60, "Tech");
+INSERT INTO gamer_girl_store VALUES (14, "Tom Nook Animal Crossing Plush", 25, "Plush");
+INSERT INTO gamer_girl_store VALUES (15, "Hatsune Miku Poster", 35, "Anime");
+
+--A list of items sold organized by price highest to lowest
+Select * FROM gamer_girl_store ORDER BY price desc;
+
+--The highest cost item in the store
+Select MAX(price) FROM gamer_girl_store;
+
+--The amount of items in each catagory of item
+SELECT type, COUNT(*) FROM gamer_girl_store GROUP BY type
+
+-- Provide avg price per section
+SELECT AVG(price)"Average Item Price in Anime Section" FROM gamer_girl_store WHERE type = "Anime"; 
+SELECT AVG(price)"Average Item Price in Plush Section" FROM gamer_girl_store WHERE type = "Plush";
+SELECT AVG(price)"Average Item Price in Tech Section" FROM gamer_girl_store WHERE type = "Tech";
