@@ -513,7 +513,7 @@ FROM pokemon
 WHERE Attack > 77.35416666666667) AND Type_1 = "Grass" OR Type_2 = "Grass"
 ORDER BY Attack desc;
 
--- Queries that are grouped catagory (Type_1) and show types that on Average have a higher base attack than average, then the same for the defense stat, then Average total
+-- Queries that Select the Types and Aggregate Data to find the Average Stat for each typing, then uses that to determine what Types have a higher base attack than the averages calculated in my first query, then the same for the defense stat, then Average total
 SELECT Type_1, AVG(attack) AS Average_Attack
 FROM pokemon 
 GROUP BY Type_1 HAVING Average_Attack > 77.35416666666667;
