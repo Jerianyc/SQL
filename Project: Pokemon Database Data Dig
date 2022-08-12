@@ -454,7 +454,7 @@ INSERT INTO pokemon(Number,Name,Type_1,Type_2,Total,HP,Attack,Defense,Sp_Atk,Sp_
 SELECT AVG(Total) AS Average_Total, AVG(Attack) AS Average_Attack, AVG(defense) AS Average_Defense, AVG(HP) AS Average_HP, AVG(Sp_Atk) AS Average_Sp_Atk, AVG(Sp_Def) AS Average_Sp_Def, AVG(Speed) AS Average_Speed
 FROM pokemon;
 
---Aggegating data to determine which Pokemon are best in each Stat catagory
+--Aggregating data to determine which Pokemon are best in each Stat catagory
 SELECT Number, Name, MAX(Attack)
 FROM pokemon;
 SELECT Number, Name, MAX(HP)
@@ -470,7 +470,7 @@ FROM pokemon;
 SELECT Number, Name, MAX(Total)
 FROM pokemon;
 
---Aggegating data to determine which Pokemon are worst in each Stat catagory
+--Aggregating data to determine which Pokemon are worst in each Stat catagory
 SELECT Number, Name, MIN(Attack)
 FROM pokemon;
 SELECT Number, Name, MIN(HP)
