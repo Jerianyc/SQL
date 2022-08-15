@@ -1,0 +1,70 @@
+--In this project, you’re going to make your own table with some small set of “famous people”, then make more tables about things they do and join those to create nice human readable lists.
+
+--For example, here are types of famous people and the questions your data could answer:
+
+--Movie stars: What movies are they in? Are they married to each other?
+--Singers: What songs did they write? Where are they from?
+--Authors: What books did they write?
+--Fictional characters: How are they related to other characters? What books do they show up in?
+--I chose to do characters from my favorite game and create two data tables, one with basic character information and one with data essential to combat in the game so users of the database can run analysis on trends relating to what are the most common weapon and vision types in relation to character profile traits.
+
+--Creation of data tables
+CREATE TABLE genshin_character_profile (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, model_type TEXT, gender TEXT, region TEXT, is_five_star TEXT);
+    INSERT INTO genshin_character_profile (name, model_type, gender, region, is_five_star) VALUES ("Albedo", "Medium", "Male", "Mondstadt", "TRUE");
+    INSERT INTO genshin_character_profile (name, model_type, gender, is_five_star) VALUES ("Aloy", "Medium", "Female", "TRUE");
+    INSERT INTO genshin_character_profile (name, model_type, gender, region, is_five_star) VALUES ("Amber", "Medium", "Female", "Mondstadt", "FALSE");
+    INSERT INTO genshin_character_profile (name, model_type, gender, region, is_five_star) VALUES ("Arataki Itto", "Tall", "Male", "Inazuma", "TRUE");
+    INSERT INTO genshin_character_profile (name, model_type, gender, region, is_five_star) VALUES ("Barbara", "Medium", "Female", "Mondstadt", "FALSE");
+    INSERT INTO genshin_character_profile (name, model_type, gender, region, is_five_star) VALUES ("Beidou", "Tall", "Female", "Liyue", "FALSE");
+    INSERT INTO genshin_character_profile (name, model_type, gender, region, is_five_star) VALUES ("Bennett", "Medium", "Male", "Mondstadt", "FALSE");
+    INSERT INTO genshin_character_profile (name, model_type, gender, region, is_five_star) VALUES ("Chongyun", "Medium", "Male", "Liyue", "FALSE");
+    INSERT INTO genshin_character_profile (name, model_type, gender, region, is_five_star) VALUES ("Diluc", "Tall", "Male", "Mondstadt", "TRUE");
+    INSERT INTO genshin_character_profile (name, model_type, gender, region, is_five_star) VALUES ("Diona", "Short", "Female", "Mondstadt", "FALSE");
+    
+CREATE TABLE combat_data (id INTEGER PRIMARY KEY AUTOINCREMENT, character_profile_id INTEGER, vision TEXT, weapon TEXT, play_style TEXT);
+    INSERT INTO combat_data (character_profile_id, vision, weapon, play_style) VALUES (3, "Pyro", "Bow", "Sub-DPS");
+    INSERT INTO combat_data (character_profile_id, vision, weapon, play_style) VALUES (7, "Pyro", "Sword", "Support");
+    INSERT INTO combat_data (character_profile_id, vision, weapon, play_style) VALUES (9, "Pyro", "Claymore", "DPS");
+    INSERT INTO combat_data (character_profile_id, vision, weapon, play_style) VALUES (1, "Geo", "Sword", "Sub-DPS");
+    INSERT INTO combat_data (character_profile_id, vision, weapon, play_style) VALUES (4, "Geo", "Claymore", "DPS");
+    INSERT INTO combat_data (character_profile_id, vision, weapon, play_style) VALUES (2, "Cryo", "Bow", "DPS");
+    INSERT INTO combat_data (character_profile_id, vision, weapon, play_style) VALUES (8, "Cryo", "Claymore", "Sub-DPS");
+    INSERT INTO combat_data (character_profile_id, vision, weapon, play_style) VALUES (10, "Cryo", "Bow", "Support");
+    INSERT INTO combat_data (character_profile_id, vision, weapon, play_style) VALUES (6, "Electro", "Claymore", "Sub-DPS");
+    INSERT INTO combat_data (character_profile_id, vision, weapon, play_style) VALUES (5, "Hydro", "Catalyst", "Support");
+
+--SELECT both tables to show all data
+SELECT * FROM genshin_character_profile;
+SELECT * FROM combat_data;
+
+--To start I simply wanted a list of characters, their vision type, and whether they are a 5 star or not, as this info can help someone decide whether they want to buy a character
+--To do so I join the character profile table with combat data table based on genshin_character_profile.id.
+
+SELECT genshin_character_profile.name, genshin_character_profile.is_five_star, combat_data.vision 
+FROM genshin_character_profile
+JOIN combat_data
+ON genshin_character_profile.id = combat_data.character_profile_id;
+
+--Next I create a table in which I select each vision type and the number of names within that catagory, in order to see if there are any trends in popularity of any certain visions
+SELECT combat_data.vision, COUNT(genshin_character_profile.name) AS "number of characters with vision" FROM combat_data
+JOIN genshin_character_profile
+ON genshin_character_profile.id = combat_data.character_profile_id
+GROUP BY vision;
+
+--As 5 Star characters are the most sought after character rarity, I wondered what the spread of weapons was like for them
+-- I SELECT weapons, and the count of names from the character profile table, join the tables and GROUP BY weapon type in order to achieve this.
+SELECT combat_data.weapon, COUNT(genshin_character_profile.name) AS "number of 5 star character with weapon" FROM combat_data
+JOIN genshin_character_profile
+ON genshin_character_profile.id = combat_data.character_profile_id
+WHERE genshin_character_profile.is_five_star = "TRUE"
+GROUP BY combat_data.weapon;
+
+--Lastly I wanted a table that shows the spread of a certain vision type between regions, to see if there is an equal spread of a given element between region.
+SELECT genshin_character_profile.region, COUNT(genshin_character_profile.name) AS "number of Cryo users" FROM genshin_character_profile
+LEFT OUTER JOIN combat_data
+ON genshin_character_profile.id = combat_data.character_profile_id
+WHERE combat_data.vision = "Cryo"
+GROUP BY genshin_character_profile.region
+
+
+
