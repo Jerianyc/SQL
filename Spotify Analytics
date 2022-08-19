@@ -1,0 +1,52 @@
+# For this project, I downloaded Spotify data from Kaggle.
+# Then I created a table to insert Spotify data into.
+# Finally, I performed analytics on the data using SQL. 
+
+#Creating the table: 
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness text NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL 
+)
+
+#Then I inserted the Spotify Data .csv into the table.
+
+#Next, I explored the data using the following SQL. 
+
+#First I wanted to see, "What's the average danceability for the 10 most popular songs?"
+SELECT AVG(danceability) FROM (SELECT danceability FROM Spotifydata ORDER BY Popularity desc LIMIT 10);
+
+#This lead my brain to the question: "What's the average danceability for the 10 least popular songs?"
+SELECT AVG(danceability) FROM (SELECT danceability FROM Spotifydata ORDER BY Popularity asc LIMIT 10);
+
+#Next I thought it would be kind of fun to mimic how Spotify will typicall make some pretty silly playlists for a user automatically. The playlist is "Sing out LOUD", Top 10 Speechiest song playlist, selected from the list of the 20 most loudest songs
+SELECT track_name, loudness, speechiness FROM (SELECT track_name, loudness FROM Spotifydata ORDER by loudness desc LIMIT 20)
+ORDER BY loudness desc
+LIMIT 10;
+
+#Then the Average duration of the top 10 highest tempo songs
+SELECT avg(duration_ms) FROM (SELECT duration_ms FROM Spotifydata ORDER BY tempo desc LIMIT 10);
+
+#Now the Top 10 Highest energy songs
+SELECT track_name FROM Spotifydata ORDER BY energy desc LIMIT 20;
+
+#Artist with the most danceable songs 
+SELECT artist_name, AVG(danceability) AS Dance_meter FROM Spotifydata GROUP BY artist_name ORDER BY Dance_meter desc LIMIT 1;
+
+#Top 5 Artists who writes the longest songs
+SELECT artist_name, AVG(duration_ms) AS Length_meter FROM Spotifydata GROUP BY artist_name ORDER BY Length_meter desc LIMIT 5;
