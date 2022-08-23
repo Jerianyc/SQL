@@ -50,3 +50,12 @@ SELECT artist_name, AVG(danceability) AS Dance_meter FROM Spotifydata GROUP BY a
 
 #Top 5 Artists who writes the longest songs
 SELECT artist_name, AVG(duration_ms) AS Length_meter FROM Spotifydata GROUP BY artist_name ORDER BY Length_meter desc LIMIT 5;
+
+#Mark each artist with average popularity above 90 with the tag 'top star'
+WITH popularity_CTE AS (
+SELECT AVG(popularity) AS avg_pop, artist_name
+FROM Spotifydata 
+GROUP BY artist_name)
+SELECT artist_name, avg_pop, 'Top Star' AS tag
+FROM popularity_CTE
+WHERE avg_pop>=90;
