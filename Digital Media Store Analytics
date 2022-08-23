@@ -1,0 +1,110 @@
+# For the following queries I am working with the database "Chinook" the database for a digital media store. It includes tables for artists, albums, media tracks, invoices, and customers.
+# I observed this dataset and came up with a few queries to answer some questions I had regarding this data
+
+# What Customers (their full names, customer ID, and country) are not in the US?
+SELECT CustomerId, FirstName, LastName, Country 
+FROM customers
+WHERE Country != 'USA';
+
+# What Customers are from Brazil.
+SELECT CustomerId, FirstName, LastName, Country 
+FROM customers
+WHERE Country = 'Brazil';
+
+# I wanted to see the Invoices of customers who are from Brazil. It includes the customer's full name, Invoice ID, Date of the invoice, and billing country.
+WITH brazil_cust_list AS (
+SELECT CustomerId, FirstName, LastName, Country 
+FROM customers
+WHERE Country = 'Brazil')
+SELECT brazil_cust_list.FirstName, brazil_cust_list.LastName, Invoices.InvoiceID, Invoices.InvoiceDate, Invoices.BillingCountry
+FROM brazil_cust_list
+JOIN Invoices 
+ON brazil_cust_list.CustomerID = Invoices.CustomerID;
+
+# Next a table that show the Employees who are Sales Agents, that I can use as a CTE for future queries about the employees performance.
+SELECT EmployeeID, FirstName, LastName
+FROM employees
+WHERE Title = 'Sales Support Agent';
+
+# Then I created a unique/distinct list of billing countries from the Invoice table.
+SELECT DISTINCT BillingCountry 
+FROM invoices;
+
+# A query that shows the invoices associated with each sales agent.
+SELECT employees.FirstName, employees.LastName, Invoices.InvoiceId
+FROM customers
+JOIN employees
+ON customers.SupportRepID = employees.EmployeeID 
+JOIN Invoices
+ON customers.CustomerId = invoices.CustomerId;
+
+# A query that shows the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers.
+SELECT invoices.Total AS Invoice_Total, customers.FirstName AS Customer_FirstName, customers.Country AS Customer_Country, employees.FirstName AS Agent_Firstname
+FROM customers
+JOIN employees
+ON customers.SupportRepID = employees.EmployeeID 
+JOIN Invoices
+ON customers.CustomerId = invoices.CustomerId;
+
+# How many Invoices were there in 2009?
+SELECT COUNT(InvoiceId)
+FROM invoices
+WHERE InvoiceDate LIKE '2009%';
+
+# What are the total sales for 2009?
+SELECT SUM(Total) FROM invoices;
+
+# I wanted to show the purchased track name with each invoice line item.
+SELECT tracks.Name, invoice_items.InvoiceLineId
+FROM tracks
+JOIN invoice_items
+ON tracks.TrackId = invoice_items.TrackId
+GROUP BY invoice_items.InvoiceLineId;
+
+# Similary; here is a query that includes the purchased track name AND artist name with each invoice line item.
+SELECT tracks.Name, invoice_items.InvoiceLineId, artists.Name
+FROM tracks
+JOIN invoice_items
+ON tracks.TrackId = invoice_items.TrackId
+JOIN albums 
+ON tracks.albumID = albums.AlbumId
+JOIN artists
+ON artists.artistID = albums.ArtistId
+GROUP BY invoice_items.InvoiceLineId;
+
+# Selecting all the Tracks, and include the Album name, Media type, and Genre.
+SELECT tracks.Name AS Track_Name, albums.Title AS Album_Name, media_types.Name AS Media_Type, genres.Name AS Genre
+FROM tracks 
+JOIN albums
+ON tracks.AlbumId = albums.AlbumId
+JOIN media_types
+ON tracks.MediaTypeId = media_types.MediaTypeId
+JOIN genres
+ON genres.GenreId = tracks.GenreId;
+
+# Showing the total sales made by each sales agent to compare their performance to one another
+WITH agent_CTE AS (SELECT EmployeeID, FirstName, LastName
+FROM employees
+WHERE Title = 'Sales Support Agent')
+SELECT agent_CTE.FirstName, SUM(invoices.Total) AS Total_Sales
+FROM agent_CTE 
+JOIN customers
+ON customers.SupportRepId = agent_CTE.EmployeeID
+JOIN invoices
+ON customers.CustomerId = invoices.CustomerId
+GROUP BY agent_CTE.FirstName;
+
+# Which sales agent made the most in sales in 2009?
+WITH agent_CTE AS (SELECT EmployeeID, FirstName, LastName
+FROM employees
+WHERE Title = 'Sales Support Agent')
+SELECT agent_CTE.FirstName, SUM(invoices.Total) AS Total_Sales
+FROM agent_CTE 
+JOIN customers
+ON customers.SupportRepId = agent_CTE.EmployeeID
+JOIN invoices
+ON customers.CustomerId = invoices.CustomerId
+WHERE invoices.InvoiceDate LIKE '2009%'
+GROUP BY agent_CTE.FirstName
+ORDER BY Total_Sales desc
+LIMIT 1;
