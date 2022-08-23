@@ -108,3 +108,18 @@ WHERE invoices.InvoiceDate LIKE '2009%'
 GROUP BY agent_CTE.FirstName
 ORDER BY Total_Sales desc
 LIMIT 1;
+
+# List of the most purchased tracks 
+SELECT t.name, COUNT(i.TrackId) AS Number_Purchased
+FROM tracks t
+JOIN invoice_items i
+ON t.TrackId = i.TrackId
+GROUP BY t.name
+ORDER BY Number_Purchased desc;
+
+# Number of invoices per Customer Name 
+SELECT customers.CustomerId, customers.FirstName, customers.LastName, COUNT(invoices.InvoiceId)
+FROM customers
+JOIN invoices 
+ON invoices.CustomerId = customers.CustomerId
+GROUP BY customers.CustomerId;
