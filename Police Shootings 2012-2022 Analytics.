@@ -1,0 +1,66 @@
+# For the following queries I imported a table on SQLite Studio 3 using data on Police brutality from Kaggle. You may find the data used through this link: https://www.kaggle.com/datasets/ramjasmaurya/us-police-shootings-from-20152022
+# Here is the query used to create the table, I then imported the .csv with the relevant data:
+
+CREATE TABLE Police_Shootings_2015_2022 (
+id INT,
+name VARCHAR (255),
+date DATE,
+manner_of_death VARCHAR (255),
+armed VARCHAR (255),
+age INT,
+gender VARCHAR (1),
+race VARCHAR (1),
+city VARCHAR (255),
+state VARCHAR (2),
+signs_of_mental_illness VARCHAR (255),
+threat_level VARCHAR (255),
+flee VARCHAR (255),
+body_camera VARCHAR (255),
+longitude DECIMAL(6,3),
+latitude DECIMAL (6,3),
+is_geocoding_exact VARCHAR (255)
+);
+
+# Then just to get a better understanding of the data, I selected all the columns and limited it to a few rows just for a quick peak:
+SELECT * FROM Shootings_2015 LIMIT 10;
+
+# Selecting tables to show the amount of cases grouped by gender, race, and state
+SELECT race, COUNT(id) FROM Shootings_2015
+GROUP BY race;
+
+SELECT gender, COUNT(id) FROM Shootings_2015
+GROUP BY gender;
+
+SELECT state, COUNT(id) AS deaths FROM Shootings_2015
+GROUP BY state
+ORDER BY deaths desc;
+
+# We learn through the previous query that California is the state with the highest number of cases, so I decide to devide it further by cities in California
+SELECT city, COUNT(id) AS deaths FROM Shootings_2015
+WHERE state = 'CA'
+GROUP BY city
+ORDER BY deaths desc;
+
+# Select the amount of cases per race where the victim showed signs of mental illness.
+SELECT race, COUNT(id) AS deaths FROM Shootings_2015
+WHERE signs_of_mental_illness = 'TRUE'
+GROUP BY race;
+
+
+# Which manner of death is most frequent?
+SELECT manner_of_death,  COUNT(id) AS deaths FROM Shootings_2015
+GROUP BY manner_of_death
+ORDER BY deaths desc
+LIMIT 1;
+
+# If the victim was armed, what were the 3 most common types of weapon they had.
+SELECT armed,  COUNT(id) AS deaths FROM Shootings_2015
+GROUP BY armed
+ORDER BY deaths desc
+LIMIT 3;
+
+# What is the breakdown by race of the number of people who were shot while carrying a TOY weapon or NO weapon.
+SELECT race,  COUNT(id) AS deaths FROM Shootings_2015
+WHERE armed = 'unarmed' 
+GROUP BY race
+ORDER BY deaths desc;
