@@ -46,7 +46,6 @@ SELECT race, COUNT(id) AS deaths FROM Shootings_2015
 WHERE signs_of_mental_illness = 'TRUE'
 GROUP BY race;
 
-
 # Which manner of death is most frequent?
 SELECT manner_of_death,  COUNT(id) AS deaths FROM Shootings_2015
 GROUP BY manner_of_death
@@ -59,7 +58,7 @@ GROUP BY armed
 ORDER BY deaths desc
 LIMIT 3;
 
-# What is the breakdown by race of the number of people who were shot while carrying a TOY weapon or NO weapon.
+# What is the breakdown by race of the number of people who were shot while carrying NO weapon.
 SELECT race,  COUNT(id) AS deaths FROM Shootings_2015
 WHERE armed = 'unarmed' 
 GROUP BY race
