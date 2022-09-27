@@ -1,0 +1,61 @@
+# Hackerank.com aims to prepare people for coding interviews and helps teach advanced topics. I will be doing a few queries per day from the site until I earn their SQL certification.
+# This code will be a collection of the "Basic" problems. The advanced ones will be in a different collection! THis is using Oracle.
+
+
+# Query all columns (attributes) for every row in the CITY table. The CITY table is described as follows:
+# https://www.hackerrank.com/challenges/select-all-sql/problem?isFullScreen=true
+
+
+SELECT * FROM CITY;
+
+# Query all columns for a city in CITY with the ID 1661. The CITY table is described as follows:
+# https://www.hackerrank.com/challenges/select-by-id/problem?isFullScreen=true&h_r=next-challenge&h_v=zen
+
+SELECT * FROM CITY
+WHERE ID = 1661;
+
+# Query all attributes of every Japanese city in the CITY table. The COUNTRYCODE for Japan is JPN. The CITY table is described as follows:
+# https://www.hackerrank.com/challenges/japanese-cities-attributes/problem?isFullScreen=true&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+
+SELECT * FROM CITY
+WHERE COUNTRYCODE = 'JPN';
+
+# Query the names of all the Japanese cities in the CITY table. The COUNTRYCODE for Japan is JPN. The CITY table is described as follows:
+# https://www.hackerrank.com/challenges/japanese-cities-name/problem?isFullScreen=true&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+
+SELECT name FROM CITY
+WHERE COUNTRYCODE = 'JPN';
+
+# Query a list of CITY and STATE from the STATION table. where LAT_N is the northern latitude and LONG_W is the western longitude. The STATION table is described as follows: 
+# https://www.hackerrank.com/challenges/weather-observation-station-1/problem?isFullScreen=true&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+
+SELECT CITY, STATE FROM STATION;
+
+# Query a list of CITY names from STATION for cities that have an even ID number. Print the results in any order, but exclude duplicates from the answer.
+The STATION table is described as follows:
+# https://www.hackerrank.com/challenges/weather-observation-station-3/problem?isFullScreen=true&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+
+SELECT DISTINCT CITY FROM STATION 
+WHERE mod(ID, 2) = 0;
+
+# Find the difference between the total number of CITY entries in the table and the number of distinct CITY entries in the table. The STATION table is described as follows:
+# https://www.hackerrank.com/challenges/weather-observation-station-4/problem?isFullScreen=true&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+# where LAT_N is the northern latitude and LONG_W is the western longitude.
+#For example, if there are three records in the table with CITY values 'New York', 'New York', 'Bengalaru', there are 2 different city names: 'New York' and 'Bengalaru'. The query returns , because
+# total number of records - number of unique city names = 3 - 2 = 1
+
+SELECT COUNT(CITY)- COUNT(DISTINCT CITY) FROM STATION;
+
+# Query the two cities in STATION with the shortest and longest CITY names, as well as their respective lengths (i.e.: number of characters in the name). If there is more than one smallest or largest city, choose the one that comes first when ordered alphabetically. The STATION table is described as follows:
+# https://www.hackerrank.com/challenges/weather-observation-station-5/problem?isFullScreen=true&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+
+SELECT * FROM
+(SELECT CITY, LENGTH(CITY) AS Length FROM STATION
+ORDER BY Length asc, CITY asc)
+WHERE ROWNUM = 1
+UNION
+SELECT * FROM 
+(SELECT CITY, LENGTH(CITY) AS Length FROM STATION
+ORDER BY Length desc, CITY desc)
+WHERE ROWNUM = 1;
+
