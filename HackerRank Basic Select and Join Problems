@@ -59,3 +59,74 @@ SELECT * FROM
 ORDER BY Length desc, CITY desc)
 WHERE ROWNUM = 1;
 
+# Query the NAME field for all American cities in the CITY table with populations larger than 120000. The CountryCode for America is USA. The CITY table is described as follows:
+
+SELECT NAME FROM CITY
+WHERE COUNTRYCODE = 'USA' AND POPULATION > 120000;
+
+# Query the list of CITY names from STATION which have vowels (i.e., a, e, i, o, and u) as both their first and last characters. Your result cannot contain duplicates. Input Format. The STATION table is described as follows:
+
+SELECT DISTINCT CITY FROM STATION
+WHERE REGEXP_LIKE (CITY, 'a$|e$|i$|o$|u$', 'i') AND REGEXP_LIKE (CITY, '^a|^e|^i|^o|^u', 'i');
+
+# Query the list of CITY names from STATION that do not start with vowels. Your result cannot contain duplicates. Input Format. The STATION table is described as follows:
+
+SELECT DISTINCT CITY FROM STATION
+WHERE NOT REGEXP_LIKE (CITY, '^a|^e|^i|^o|^u', 'i');
+
+# Query the list of CITY names from STATION that do not end with vowels. Your result cannot contain duplicates.
+
+SELECT DISTINCT CITY FROM STATION
+WHERE NOT REGEXP_LIKE (CITY, 'a$|e$|i$|o$|u$', 'i');
+
+# Query the list of CITY names from STATION that either do not start with vowels or do not end with vowels. Your result cannot contain duplicates.
+
+SELECT DISTINCT CITY FROM STATION
+WHERE NOT REGEXP_LIKE (CITY, 'a$|e$|i$|o$|u$', 'i') OR NOT REGEXP_LIKE (CITY, '^a|^e|^i|^o|^u', 'i');
+
+# Query the list of CITY names from STATION that do not start with vowels and do not end with vowels. Your result cannot contain duplicates.
+
+SELECT DISTINCT CITY FROM STATION
+WHERE NOT REGEXP_LIKE (CITY, 'a$|e$|i$|o$|u$', 'i') AND NOT REGEXP_LIKE (CITY, '^a|^e|^i|^o|^u', 'i');
+
+# Query the Name of any student in STUDENTS who scored higher than  Marks. Order your output by the last three characters_ of each name. If two or more students both have names ending in the same last three characters (i.e.: Bobby, Robby, etc.), secondary sort them by ascending ID.
+# https://www.hackerrank.com/challenges/more-than-75-marks/problem?isFullScreen=true&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+
+SELECT NAME FROM STUDENTS
+WHERE MARKS > 75
+ORDER BY substr(NAME, -3, 3), ID;
+
+# Write a query that prints a list of employee names (i.e.: the name attribute) from the Employee table in alphabetical order.
+# https://www.hackerrank.com/challenges/salary-of-employees/problem?isFullScreen=true
+
+SELECT NAME FROM EMPLOYEE
+ORDER BY NAME;
+
+# Write a query that prints a list of employee names (i.e.: the name attribute) for employees in Employee having a salary greater than $2000  per month who have been employees for less than  10 months. Sort your result by ascending employee_id.
+
+SELECT name FROM employee
+WHERE salary > 2000 and months < 10
+ORDER BY employee_id;
+
+# Given the CITY and COUNTRY tables, query the sum of the populations of all cities where the CONTINENT is 'Asia'.
+# https://www.hackerrank.com/challenges/asian-population/problem?isFullScreen=true
+
+SELECT sum(city.population) FROM city
+JOIN country 
+ON city.countrycode = country.code
+WHERE country.continent = 'Asia';
+
+# Given the CITY and COUNTRY tables, query the names of all cities where the CONTINENT is 'Africa'.
+SELECT city.name FROM CITY
+JOIN country
+ON city.countrycode = country.code
+WHERE country.continent = 'Africa';
+
+# Given the CITY and COUNTRY tables, query the names of all the continents (COUNTRY.Continent) and their respective average city populations (CITY.Population) rounded down to the nearest integer.
+
+SELECT country.continent, FLOOR(AVG(city.population)) FROM city
+JOIN COUNTRY
+ON city.countrycode = country.code
+GROUP BY country.continent;
+
+# Ketty gives Eve a task to generate a report containing three columns: Name, Grade and Mark. Ketty doesn't want the NAMES of those students who received a grade lower than 8. The report must be in descending order by grade -- i.e. higher grades are entered first. If there is more than one student with the same grade (8-10) assigned to them, order those particular students by their name alphabetically. Finally, if the grade is lower than 8, use "NULL" as their name and list them by their grades in descending order. If there is more than one student with the same grade (1-7) assigned to them, order those particular students by their marks in ascending order. Write a query to help Eve.
